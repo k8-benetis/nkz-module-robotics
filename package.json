@@ -2,6 +2,7 @@
   "name": "nekazari-module-template",
   "version": "1.0.0",
   "description": "Nekazari Module Template - Quick Start",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./src/App.tsx",
   "scripts": {
