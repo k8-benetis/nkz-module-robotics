@@ -129,10 +129,10 @@ spec:
         - name: worker
           image: ghcr.io/k8-benetis/nkz-module-lidar/lidar-backend:latest
           imagePullPolicy: Always
-          # Override command to run RQ worker (rq is in PATH via pip install)
+          # Override command to run RQ worker (full path required - not in default PATH)
           command:
             [
-              "rq",
+              "/opt/conda/bin/rq",
               "worker",
               "lidar-processing",
               "--url",
