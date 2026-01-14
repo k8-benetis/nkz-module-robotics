@@ -1,5 +1,6 @@
 # Dockerfile for LIDAR Module Backend (Conda/Mamba-based)
 # This image uses micromamba to handle complex geospatial dependencies (PDAL, GDAL)
+# Build from backend/ dir: docker build -t lidar-backend .
 
 FROM mambaorg/micromamba:1.5-jammy
 
@@ -18,8 +19,8 @@ USER $MAMBA_USER
 
 WORKDIR /app
 
-# Copy environment file
-COPY --chown=$MAMBA_USER:$MAMBA_USER backend/environment.yml /tmp/environment.yml
+# Copy environment file (paths relative to backend/ build context)
+COPY --chown=$MAMBA_USER:$MAMBA_USER environment.yml /tmp/environment.yml
 
 # Create conda environment with all geospatial dependencies
 RUN micromamba install -y -n base -f /tmp/environment.yml && \
@@ -29,13 +30,13 @@ RUN micromamba install -y -n base -f /tmp/environment.yml && \
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
 # Copy requirements for pip-only packages (RQ, FastAPI extras, etc.)
-COPY --chown=$MAMBA_USER:$MAMBA_USER backend/requirements.txt ./requirements.txt
+COPY --chown=$MAMBA_USER:$MAMBA_USER requirements.txt ./requirements.txt
 
 # Install remaining Python dependencies via pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY --chown=$MAMBA_USER:$MAMBA_USER backend/app ./app
+COPY --chown=$MAMBA_USER:$MAMBA_USER app ./app
 
 # Set Python path
 ENV PYTHONPATH=/app
