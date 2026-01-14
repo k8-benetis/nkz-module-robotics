@@ -29,7 +29,7 @@ httpx==0.26.0
 requests==2.31.0
 
 # NGSI-LD / Orion integration
-ngsildclient==0.4.9
+ngsildclient==0.5.2
 
 # 3D Tiles conversion (not available on conda-forge)
 py3dtiles==7.0.0
