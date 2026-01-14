@@ -3,10 +3,14 @@
    ============================================================================
    A stunning, modern design with smooth animations and premium aesthetics
    
-   NOTE: Do NOT include @tailwind directives here. The host application
-   already includes Tailwind CSS. Including them here would reset global
-   styles and break the host's layout.
+   NOTE: Do NOT include @tailwind base here! It resets global styles and
+   breaks the host's layout. We only include components and utilities
+   which are needed for @apply directives.
    ============================================================================ */
+
+/* Only include components and utilities - NOT base (which resets styles) */
+@tailwind components;
+@tailwind utilities;
 
 /* ============================================================================
    CSS Custom Properties
