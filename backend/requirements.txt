@@ -31,6 +31,9 @@ requests==2.31.0
 # NGSI-LD / Orion integration
 ngsildclient==0.4.9
 
+# 3D Tiles conversion (not available on conda-forge)
+py3dtiles==7.0.0
+
 # Utilities
 python-dotenv==1.0.0
 python-dateutil==2.8.2

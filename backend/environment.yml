@@ -8,7 +8,7 @@ channels:
 dependencies:
   # Python version
   - python=3.11
-  
+
   # Core geospatial libraries (must be installed via Conda)
   - pdal=2.6
   - python-pdal=3.2
@@ -18,19 +18,16 @@ dependencies:
   - shapely=2.0
   - pyproj=3.6
   - geopandas=0.14
-  
-  # 3D Tiles conversion
-  - py3dtiles=7.0
-  
+
   # Image processing for tree segmentation
   - scikit-image=0.22
   - scipy=1.11
-  
+
   # NumPy (pinned for compatibility)
   - numpy=1.24
-  
+
   # PostgreSQL adapter
   - psycopg2=2.9
-  
+
   # LASzip for LAZ decompression (PDAL plugin)
   - laszip=3.4
