@@ -1,92 +1,298 @@
-# LIDAR Module - Nekazari Platform
+# NKZ Module Template
 
-LIDAR Point Cloud Viewer module for the Nekazari Platform. This module enables visualization of LIDAR point cloud data (LAZ files) from IDENA (Infraestructura de Datos Espaciales de Navarra) in the unified CesiumJS viewer.
+**Production-Ready Template** for creating NKZ Platform (Nekazari) modules.
 
-## Features
+Get your module running in 5 minutes! 🚀
 
-- Download LAZ files from IDENA for selected parcels
-- Automatic conversion to 3D Tiles format for CesiumJS
-- Interactive point cloud visualization in the unified viewer
-- Integration with unified viewer slots (layer-toggle, map-layer, context-panel)
+## Quick Start
 
-## Architecture
-
-### Backend
-- FastAPI service for LIDAR data download and conversion
-- REST API endpoints for layer management
-- Integration with IDENA data sources
-
-### Frontend
-- React application with Module Federation
-- Integration with unified viewer via slots
-- CesiumJS 3D Tiles visualization
-
-## Development
-
-### Prerequisites
-- Node.js 20+
-- Python 3.11+
-- Docker (for containerized deployment)
-
-### Local Development
-
-#### Backend
 ```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
+# Clone this template
+git clone https://github.com/k8-benetis/nkz-module-template.git my-module
+cd my-module
 
-#### Frontend
-```bash
+# Install dependencies
 npm install
-npm run dev  # Starts on port 5004
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
 ```
 
-## Deployment
+## What's Included
 
-### Build Docker Images
+- ✅ Complete "Hello World" example
+- ✅ **SDK packages from NPM** (`@nekazari/sdk`, `@nekazari/ui-kit`)
+- ✅ All dependencies pre-configured
+- ✅ TypeScript setup with full type support
+- ✅ Tailwind CSS configured
+- ✅ Vite proxy for API calls (development)
+- ✅ Module Federation configured
+- ✅ Slot system for Unified Viewer integration
+
+---
+
+## Module Structure
+
+```
+my-module/
+├── src/
+│   ├── App.tsx                 # Main module component (standalone page)
+│   ├── components/
+│   │   └── slots/              # Slot components for Unified Viewer
+│   ├── slots/
+│   │   └── index.ts            # Slot registration (IMPORTANT!)
+│   └── services/
+│       └── api.ts              # API client using SDK
+├── assets/
+│   └── icon.png                # Module icon (128x128px)
+├── manifest.json               # Module metadata (IMPORTANT!)
+├── vite.config.ts              # Module Federation config
+└── package.json
+```
+
+---
+
+## Slots System
+
+Modules can integrate with the **Unified Viewer** (`/entities` page) by providing widgets for specific slots.
+
+### Available Slots
+
+| Slot | Location | Use Case |
+|------|----------|----------|
+| `layer-toggle` | Layer manager dropdown | Toggle module layers on/off |
+| `context-panel` | Right panel | Show details when entity is selected |
+| `bottom-panel` | Bottom panel | Timelines, charts, temporal controls |
+| `entity-tree` | Left panel | Custom entity lists or filters |
+| `map-layer` | Map overlays | Cesium layers, markers, overlays |
+
+### Registering Slots
+
+Edit `src/slots/index.ts`:
+
+```typescript
+import { MyLayerToggle } from '../components/slots/MyLayerToggle';
+import { MyContextPanel } from '../components/slots/MyContextPanel';
+
+// IMPORTANT: Set this to match your module ID in manifest.json
+const MODULE_ID = 'my-module';
+
+export const viewerSlots = {
+  'layer-toggle': [
+    {
+      id: 'my-module-layer-toggle',
+      moduleId: MODULE_ID,  // REQUIRED for all slots
+      component: 'MyLayerToggle',
+      priority: 50,
+      localComponent: MyLayerToggle,
+    }
+  ],
+  'context-panel': [
+    {
+      id: 'my-module-context',
+      moduleId: MODULE_ID,
+      component: 'MyContextPanel',
+      priority: 50,
+      localComponent: MyContextPanel,
+      // Only show when specific entity types are selected
+      showWhen: {
+        entityType: ['AgriParcel']
+      }
+    }
+  ],
+  'bottom-panel': [],
+  'entity-tree': [],
+  'map-layer': [],
+};
+```
+
+### Slot Widget Interface
+
+```typescript
+interface SlotWidgetDefinition {
+  id: string;                    // Unique ID (prefix with module name)
+  moduleId: string;              // REQUIRED: Your module ID
+  component: string;             // Component name (for logging)
+  priority: number;              // Lower = renders first
+  localComponent: React.FC;      // The actual component
+  defaultProps?: Record<string, any>;
+  showWhen?: {
+    entityType?: string[];       // Show for specific entity types
+    layerActive?: string[];      // Show when specific layers are active
+  };
+}
+```
+
+---
+
+## Manifest.json
+
+The `manifest.json` file defines all module metadata.
+
+### Required Fields
+
+```json
+{
+  "id": "my-module",              // Unique module identifier
+  "name": "my-module",            // Internal name
+  "display_name": "My Module",    // User-facing name
+  "version": "1.0.0",
+  "route_path": "/my-module",     // URL path for standalone page
+  "label": "My Module",           // Sidebar label
+  "icon": "leaf"                  // Lucide icon name (optional)
+}
+```
+
+### Navigation Configuration
+
+```json
+{
+  "navigation": {
+    "sidebar": {
+      "enabled": true,           // Show in sidebar
+      "priority": 50,            // Order (lower = higher)
+      "section": "addons"        // "addons" section in sidebar
+    }
+  }
+}
+```
+
+### Slots Declaration (for documentation)
+
+```json
+{
+  "slots": {
+    "layer-toggle": [
+      {
+        "id": "my-module-layer",
+        "component": "MyLayerToggle"
+      }
+    ],
+    "context-panel": [],
+    "bottom-panel": []
+  }
+}
+```
+
+---
+
+## SDK Usage
+
+### API Calls
+
+```typescript
+import { NKZClient } from '@nekazari/sdk';
+
+const client = new NKZClient({
+  baseUrl: '/api',
+  getToken: () => localStorage.getItem('token'),
+  getTenantId: () => localStorage.getItem('tenantId'),
+});
+
+// GET request
+const data = await client.get('/my-module/items');
+
+// POST request
+await client.post('/my-module/items', { name: 'New Item' });
+```
+
+### Viewer Context
+
+```typescript
+import { useViewer } from '@nekazari/sdk';
+
+const MySlot = () => {
+  const {
+    selectedEntityId,    // Currently selected entity
+    selectedEntityType,  // Type of selected entity
+    isLayerActive,       // Check if a layer is active
+    currentDate,         // Current date in viewer
+  } = useViewer();
+
+  return (
+    <div>
+      Selected: {selectedEntityId}
+    </div>
+  );
+};
+```
+
+### UI Components
+
+```typescript
+import { Button, Card, Input } from '@nekazari/ui-kit';
+
+const MyComponent = () => (
+  <Card padding="lg" className="shadow-md">
+    <Input label="Name" placeholder="Enter name..." />
+    <Button variant="primary">Submit</Button>
+  </Card>
+);
+```
+
+---
+
+## Development Workflow
+
+### 1. Local Development
+
 ```bash
-# Backend
-docker build -f backend/Dockerfile -t ghcr.io/k8-benetis/nkz-module-lidar/lidar-backend:latest .
-
-# Frontend
-docker build -f frontend/Dockerfile -t ghcr.io/k8-benetis/nkz-module-lidar/lidar-frontend:latest .
+npm run dev
 ```
 
-### Kubernetes Deployment
+Opens at `http://localhost:5003`. The Vite proxy forwards `/api` calls to the platform backend.
+
+### 2. Testing with Platform
+
+Set environment variables for API connection:
+
+```env
+VITE_API_BASE_URL=https://nkz.artotxiki.com
+```
+
+### 3. Building for Production
+
 ```bash
-# Apply deployments
-kubectl apply -f k8s/backend-deployment.yaml
-kubectl apply -f k8s/frontend-deployment.yaml
-
-# Register module in platform database
-psql -h <db-host> -U <user> -d nekazari -f k8s/registration.sql
+npm run build
 ```
 
-## Module Integration
+Creates `dist/` with:
+- `assets/remoteEntry.js` - Module Federation entry
+- Bundle files for the module
 
-This module integrates with the Nekazari Platform through:
+### 4. Packaging
 
-1. **Module Federation**: Remote module loaded dynamically by the host
-2. **Slot System**: Provides widgets for:
-   - `layer-toggle`: Layer control widget
-   - `map-layer`: CesiumJS 3D Tiles layer
-   - `context-panel`: Configuration panel
+```bash
+zip -r my-module-v1.0.0.zip \
+  manifest.json package.json vite.config.ts \
+  src/ assets/ dist/
+```
 
-## API Endpoints
+---
 
-- `GET /api/lidar/layers` - List available LIDAR layers
-- `POST /api/lidar/layers` - Create new LIDAR layer (download and convert)
-- `GET /api/lidar/layers/{layer_id}` - Get layer details
-- `DELETE /api/lidar/layers/{layer_id}` - Delete layer
+## Support
 
-## Notes
+- **Email**: developers@nekazari.com
+- **Documentation**: [Developer Guide](https://github.com/k8-benetis/nekazari-public/blob/main/docs/EXTERNAL_DEVELOPER_GUIDE.md)
 
-- LAZ to 3D Tiles conversion requires additional tooling (PDAL, 3d-tiles-tools, etc.)
-- IDENA data access may require authentication/API keys
-- Large point clouds may require significant storage and processing resources
+---
 
-## License
+## SDK Packages
 
-Apache-2.0
+This template uses **publicly available** SDK packages from NPM:
+
+- **`@nekazari/sdk`** - API client, authentication, i18n
+- **`@nekazari/ui-kit`** - UI components (Button, Card, Input, etc.)
+
+Both packages are licensed under **Apache-2.0**.
+
+**NPM Links**:
+- SDK: https://www.npmjs.com/package/@nekazari/sdk
+- UI-Kit: https://www.npmjs.com/package/@nekazari/ui-kit
+
+---
+
+**Happy Coding!** 🎉
