@@ -41,21 +41,11 @@ export interface ModuleViewerSlots {
 }
 
 // =============================================================================
-// Example Slot Component
+// Slot Components
 // =============================================================================
+import RoboticsCockpit from '../components/RoboticsCockpit';
 
-const ExampleSlot: React.FC = () => {
-    return (
-        <div className="p-4 text-center">
-            <p className="text-sm text-slate-600">
-                Hello from {MODULE_ID} module!
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-                This is an example slot widget.
-            </p>
-        </div>
-    );
-};
+// =============================================================================
 
 // =============================================================================
 // Slots Configuration
@@ -66,11 +56,14 @@ export const moduleSlots: ModuleViewerSlots = {
     'layer-toggle': [],
     'context-panel': [
         {
-            id: `${MODULE_ID}-example`,
+            id: `${MODULE_ID}-cockpit`,
             moduleId: MODULE_ID,
-            component: 'ExampleSlot',
-            priority: 100,
-            localComponent: ExampleSlot,
+            component: 'RoboticsCockpit',
+            priority: 10, // High priority to appear at the top
+            localComponent: RoboticsCockpit,
+            showWhen: {
+                entityType: ['Robot', 'AgriRobot', 'Rover'] // Supporting multiple potential identifiers
+            }
         }
     ],
     'bottom-panel': [],
