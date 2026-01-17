@@ -18,8 +18,9 @@ spec:
         module: robotics
     spec:
       containers:
-        - name: zenoh
-          image: eclipse/zenoh:1.0.0-rc4
+        - name: zenoh-router
+          image: eclipse/zenoh:1.0.0
+          imagePullPolicy: IfNotPresent
           args:
             - "--config"
             - "/config/zenoh.json5"
