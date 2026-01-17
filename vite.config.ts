@@ -8,19 +8,13 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'lidar_module',
+      name: 'robotics_module',
       filename: 'remoteEntry.js',
       exposes: {
         // Main app component
         './App': './src/App.tsx',
         // viewerSlots for unified viewer integration - MUST be named './viewerSlots' for host compatibility
         './viewerSlots': './src/slots/index.tsx',
-        // Individual components (for direct import)
-        './LidarLayerControl': './src/components/slots/LidarLayerControl.tsx',
-        './LidarLayer': './src/components/slots/LidarLayer.tsx',
-        './LidarConfig': './src/components/slots/LidarConfig.tsx',
-        // Context provider
-        './LidarProvider': './src/services/lidarContext.tsx',
       },
       shared: {
         'react': {
