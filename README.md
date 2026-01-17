@@ -1,5 +1,8 @@
 # Robotics & Telemetry Module (`nkz-module-robotics`)
 
+**Vendor**: [Robotika](https://robotika.cloud)  
+**Standard**: NKZ (Nekazari)
+
 This module enables advanced robotics integration for the Nekazari platform, specifically focusing on low-latency telemetry and control via **Eclipse Zenoh**.
 
 ## Features

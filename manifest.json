@@ -3,12 +3,13 @@
   "name": "robotics",
   "display_name": "Robotics & Telemetry",
   "version": "1.0.0",
-  "description": "Advanced Robotics Module - Zenoh Integration and Real-time Control",
+  "description": "Advanced Robotics Module for Nekazari Platform (Standard NKZ). Provided by Robotika.",
   "short_description": "Robotics control and telemetry via Zenoh",
   "author": {
-    "name": "Nekazari Team",
-    "email": "nekazari@artotxiki.com",
-    "organization": "Artotxiki Robotics"
+    "name": "Robotika Engineering",
+    "email": "info@robotika.cloud",
+    "organization": "Robotika",
+    "website": "https://robotika.cloud"
   },
   "category": "robotics",
   "module_type": "ADDON_CORE",
