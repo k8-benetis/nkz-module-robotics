@@ -1,8 +1,8 @@
 {
-  "name": "nkz-module-lidar",
+  "name": "nkz-module-robotics",
   "version": "1.0.0",
-  "description": "LIDAR Point Cloud Viewer for Nekazari Platform - Visualize LAZ files from IDENA in CesiumJS",
-  "license": "Apache-2.0",
+  "description": "Robotics Cockpit & Telemetry Module for Nekazari Platform",
+  "license": "AGPL-3.0-only",
   "type": "module",
   "main": "./src/App.tsx",
   "scripts": {

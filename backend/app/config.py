@@ -9,22 +9,20 @@ from typing import Optional
 
 
 class Settings(BaseSettings):
-    """Application settings loaded from environment variables."""
+    """Application settings."""
+    API_V1_STR: str = "/api"
+    PROJECT_NAME: str = "Robotics Module API"
     
-    # Database (PostGIS)
-    DATABASE_URL: str = "postgresql://postgres:postgres@postgresql:5432/nekazari"
-    
-    # Redis (for RQ job queue)
+    # Shared Services
     REDIS_URL: str = "redis://redis:6379/0"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@timescaledb:5432/nekazari"
     
     # MinIO / S3 Storage
     MINIO_ENDPOINT: str = "minio:9000"
     MINIO_ACCESS_KEY: str = "minioadmin"
     MINIO_SECRET_KEY: str = "minioadmin"
-    MINIO_BUCKET: str = "lidar-tilesets"
     MINIO_SECURE: bool = False
     
-    # Public URL for serving tilesets (used by frontend)
     TILESET_PUBLIC_URL: str = "https://nkz.artotxiki.com/lidar-tilesets"
     
     # Orion-LD Context Broker

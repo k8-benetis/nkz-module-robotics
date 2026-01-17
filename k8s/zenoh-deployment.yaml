@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zenoh-router
+  namespace: nekazari
+  labels:
+    app: zenoh-router
+    module: robotics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zenoh-router
+  template:
+    metadata:
+      labels:
+        app: zenoh-router
+        module: robotics
+    spec:
+      containers:
+        - name: zenoh
+          image: eclipse/zenoh:1.0.0-rc4
+          args:
+            - "--config"
+            - "/config/zenoh.json5"
+          ports:
+            - containerPort: 7447
+              name: tcp
+              protocol: TCP
+            - containerPort: 7447
+              name: udp
+              protocol: UDP
+            - containerPort: 8447
+              name: ws
+              protocol: TCP
+            - containerPort: 8000
+              name: http
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: zenoh-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zenoh-service
+  namespace: nekazari
+  labels:
+    app: zenoh-router
+spec:
+  selector:
+    app: zenoh-router
+  ports:
+    - name: tcp
+      port: 7447
+      targetPort: 7447
+      protocol: TCP
+    - name: udp
+      port: 7447
+      targetPort: 7447
+      protocol: UDP
+    - name: ws
+      port: 8447
+      targetPort: 8447
+      protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zenoh-config
+  namespace: nekazari
+data:
+  zenoh.json5: |
+    {
+      mode: "router",
+      listen: {
+        endpoints: [
+          "tcp/0.0.0.0:7447", 
+          "udp/0.0.0.0:7447",
+          "ws/0.0.0.0:8447"
+        ]
+      },
+      rest: {
+        http_port: 8000
+      },
+      // TODO: Enable Username/Password Authentication for Production
+      // plugins: {
+      //   auth: {
+      //     username_password: {
+      //       users: [
+      //         // Users will be dynamically managed or mounted via Secret
+      //       ]
+      //     }
+      //   }
+      // }
+    }
