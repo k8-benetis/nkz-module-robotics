@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Gamepad2, AlertTriangle, Battery, Signal, Wifi, Activity } from 'lucide-react';
-import { Card } from '@nekazari/ui-kit'; // Assuming UI kit exists from template
 
 // Types
 type DriveMode = 'ACKERMANN_FRONT' | 'ACKERMANN_DUAL' | 'CRAB' | 'DIFFERENTIAL';
@@ -63,10 +62,10 @@ const RoboticsCockpit: React.FC = () => {
                                 key={m}
                                 onClick={() => setOpMode(m as OperationMode)}
                                 className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all duration-200 ${opMode === m
-                                        ? m === 'MANUAL'
-                                            ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
-                                            : 'bg-emerald-600 text-white shadow-[0_0_15px_rgba(5,150,105,0.5)]'
-                                        : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800'
+                                    ? m === 'MANUAL'
+                                        ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]'
+                                        : 'bg-emerald-600 text-white shadow-[0_0_15px_rgba(5,150,105,0.5)]'
+                                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800'
                                     }`}
                             >
                                 {m}
@@ -151,8 +150,8 @@ const RoboticsCockpit: React.FC = () => {
                                 onClick={() => setDriveMode(mode.id as DriveMode)}
                                 disabled={opMode !== 'MANUAL'}
                                 className={`relative flex flex-col items-start justify-center p-3 rounded-lg border transition-all duration-200 ${driveMode === mode.id
-                                        ? 'bg-blue-600/10 border-blue-500/50 text-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.1)]'
-                                        : 'bg-slate-800/30 border-slate-700/50 text-slate-500 hover:bg-slate-800 hover:border-slate-600'
+                                    ? 'bg-blue-600/10 border-blue-500/50 text-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.1)]'
+                                    : 'bg-slate-800/30 border-slate-700/50 text-slate-500 hover:bg-slate-800 hover:border-slate-600'
                                     } ${opMode !== 'MANUAL' ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <div className="flex items-center justify-between w-full mb-1">

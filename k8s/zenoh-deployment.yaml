@@ -93,17 +93,17 @@ data:
           "ws/0.0.0.0:8447"
         ]
       },
-      rest: {
-        http_port: 8000
-      },
-      // TODO: Enable Username/Password Authentication for Production
-      // plugins: {
-      //   auth: {
-      //     username_password: {
-      //       users: [
-      //         // Users will be dynamically managed or mounted via Secret
-      //       ]
-      //     }
-      //   }
-      // }
+      plugins: {
+        rest: {
+          http_port: 8000
+        }
+        // TODO: Enable Username/Password Authentication for Production
+        // auth: {
+        //   username_password: {
+        //     users: [
+        //       // Users will be dynamically managed or mounted via Secret
+        //     ]
+        //   }
+        // }
+      }
     }
