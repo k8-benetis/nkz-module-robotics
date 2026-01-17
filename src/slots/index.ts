@@ -20,7 +20,7 @@ import React from 'react';
 // IMPORTANT: Set your module ID here
 // This MUST match the "id" field in your manifest.json
 // =============================================================================
-const MODULE_ID = 'hello-world';
+const MODULE_ID = 'robotics';
 
 // Type definitions for slot widgets
 export interface SlotWidgetDefinition {
@@ -82,9 +82,9 @@ const ExampleSlot: React.FC = () => {
                 </p>
                 < p className = "text-xs text-slate-400 mt-1" >
                     This is an example slot widget.
-      </p>
+            </p>
                         </div>
-  );
+    );
 };
 
 // =============================================================================
