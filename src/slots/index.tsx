@@ -1,89 +1,81 @@
 /**
- * Slot Registration for LIDAR Module
+ * Slot Registration for Your Module
+ * =============================================================================
+ * Defines all slots that integrate with the Unified Viewer (/entities page).
  * 
- * Defines all slots that integrate with the Unified Viewer.
- * Each widget includes explicit `moduleId` for proper provider wrapping.
+ * IMPORTANT: All widgets MUST include explicit `moduleId` property.
+ * This ensures proper provider wrapping and error handling by the host.
  */
 
 import React from 'react';
-import LidarLayerControl from '../components/slots/LidarLayerControl';
-import { LidarLayer } from '../components/slots/LidarLayer';
-import { LidarConfig } from '../components/slots/LidarConfig';
-import { LidarProvider } from '../services/lidarContext';
 
-// Module identifier - used for all slot widgets
-const MODULE_ID = 'lidar';
+// =============================================================================
+// IMPORTANT: Set your module ID here
+// This MUST match the "id" field in your manifest.json
+// =============================================================================
+const MODULE_ID = 'robotics';
 
+// Type definitions for slot widgets (simplified for brevity as they are interfaces)
 export interface SlotWidgetDefinition {
-  id: string;
-  /** 
-   * Module ID that owns this widget. REQUIRED for remote modules.
-   * Used by SlotRenderer to group widgets and apply shared providers.
-   */
-  moduleId: string;
-  component: string;
-  priority: number;
-  localComponent: React.ComponentType<any>;
-  defaultProps?: Record<string, any>;
-  showWhen?: {
-    entityType?: string[];
-    layerActive?: string[];
-  };
+    id: string;
+    moduleId: string;
+    component: string;
+    priority: number;
+    localComponent: React.ComponentType<any>;
+    defaultProps?: Record<string, any>;
+    showWhen?: {
+        entityType?: string[];
+        layerActive?: string[];
+    };
 }
 
 export type SlotType = 'layer-toggle' | 'context-panel' | 'bottom-panel' | 'entity-tree' | 'map-layer';
 
-export type ModuleViewerSlots = Record<SlotType, SlotWidgetDefinition[]> & {
-  moduleProvider?: React.ComponentType<{ children: React.ReactNode }>;
+export interface ModuleViewerSlots {
+    'layer-toggle'?: SlotWidgetDefinition[];
+    'context-panel'?: SlotWidgetDefinition[];
+    'bottom-panel'?: SlotWidgetDefinition[];
+    'entity-tree'?: SlotWidgetDefinition[];
+    'map-layer'?: SlotWidgetDefinition[];
+    moduleProvider?: React.ComponentType<{ children: React.ReactNode }>;
+}
+
+// =============================================================================
+// Example Slot Component
+// =============================================================================
+
+const ExampleSlot: React.FC = () => {
+    return (
+        <div className="p-4 text-center">
+            <p className="text-sm text-slate-600">
+                Hello from {MODULE_ID} module!
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+                This is an example slot widget.
+            </p>
+        </div>
+    );
 };
 
-/**
- * LIDAR Module Slots Configuration
- * 
- * All widgets explicitly declare moduleId: 'lidar' so the host
- * correctly groups them and applies the LidarProvider context.
- */
-export const lidarSlots: ModuleViewerSlots = {
-  'map-layer': [
-    {
-      id: 'lidar-cesium-layer',
-      moduleId: MODULE_ID,
-      component: 'LidarLayer',
-      priority: 10,
-      localComponent: LidarLayer
-    }
-  ],
-  'layer-toggle': [
-    {
-      id: 'lidar-layer-control',
-      moduleId: MODULE_ID,
-      component: 'LidarLayerControl',
-      priority: 10,
-      localComponent: LidarLayerControl,
-      defaultProps: { visible: true },
-      showWhen: { entityType: ['AgriParcel'] }
-    }
-  ],
-  'context-panel': [
-    {
-      id: 'lidar-config',
-      moduleId: MODULE_ID,
-      component: 'LidarConfig',
-      priority: 20,
-      localComponent: LidarConfig,
-      defaultProps: { mode: 'panel' },
-      showWhen: { entityType: ['AgriParcel'] }
-    }
-  ],
-  'bottom-panel': [],
-  'entity-tree': [],
+// =============================================================================
+// Slots Configuration
+// =============================================================================
 
-  // Host's SlotRenderer wraps all widgets from this module with LidarProvider
-  moduleProvider: LidarProvider
+export const moduleSlots: ModuleViewerSlots = {
+    'map-layer': [],
+    'layer-toggle': [],
+    'context-panel': [
+        {
+            id: `${MODULE_ID}-example`,
+            moduleId: MODULE_ID,
+            component: 'ExampleSlot',
+            priority: 100,
+            localComponent: ExampleSlot,
+        }
+    ],
+    'bottom-panel': [],
+    'entity-tree': [],
 };
 
-/**
- * Export as viewerSlots for host integration
- */
-export const viewerSlots = lidarSlots;
-export default lidarSlots;
+export const viewerSlots = moduleSlots;
+export default moduleSlots;
