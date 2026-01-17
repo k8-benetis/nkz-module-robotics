@@ -220,3 +220,5 @@ const RoboticsCockpit: React.FC = () => {
         </div>
     );
 };
+
+export default RoboticsCockpit;
